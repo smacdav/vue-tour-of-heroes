@@ -3,7 +3,7 @@
     <h4><label for="search-box">Hero Search</label> </h4>
     <input id="search-box" v-model="searchTerm" @input="search" />
 
-    <div v-if="heroes$">
+    <div v-if="heroes">
     <ul class="search-result">
         <li v-for="hero in heroes" :key="hero.id">
             <router-link :to="`/detail/${hero.id}`">{{hero.name}}</router-link>
