@@ -68,10 +68,11 @@ class HeroService {
             return;
         }
 
-        Vue.http.get(`${this.heroesUrl}/?name=${term}`).then(
-            resp => callback(resp),
-            this.handleError(`searchHeroes term=${term}`)
-        );
+        Vue.http.get(`${this.heroesUrl}/?name=${term}`)
+            .then(
+                resp => callback(resp),
+                this.handleError(`searchHeroes term=${term}`)
+            );
     }
 
 

@@ -10,9 +10,7 @@
         </router-link>
     </div>
 
-    <hr />
     <HeroSearch></HeroSearch>
-    <hr />
 </div>
 </template>
 
