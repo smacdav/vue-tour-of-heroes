@@ -1,31 +1,56 @@
 <template>
-  <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
-    </div>
-    <router-view/>
+  <div>
+    <h1>{{title}}</h1>
+    <nav>
+      <router-link to="/dashboard">Dashboard</router-link>
+      <router-link to="/heroes">Heroes</router-link>
+    </nav>
+    <router-view></router-view>
+    <Messages></Messages>
   </div>
 </template>
 
+<script>
+  import Messages from "@/components/Messages";
+
+  export default {
+    name: 'app',
+    components: {Messages},
+    data() {
+      return {
+        title: 'Tour of Heroes'
+      };
+    }
+  }
+</script>
+
 <style>
-#app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-}
-#nav {
-  padding: 30px;
-}
-
-#nav a {
-  font-weight: bold;
-  color: #2c3e50;
-}
-
-#nav a.router-link-exact-active {
-  color: #42b983;
-}
+  /* AppComponent's private CSS styles */
+  h1 {
+    font-size: 1.2em;
+    margin-bottom: 0;
+  }
+  h2 {
+    font-size: 2em;
+    margin-top: 0;
+    padding-top: 0;
+  }
+  nav a {
+    padding: 5px 10px;
+    text-decoration: none;
+    margin-top: 10px;
+    display: inline-block;
+    background-color: #eee;
+    border-radius: 4px;
+  }
+  nav a:visited, a:link {
+    color: #334953;
+  }
+  nav a:hover {
+    color: #039be5;
+    background-color: #cfd8dc;
+  }
+  nav a.active {
+    color: #039be5;
+  }
 </style>
