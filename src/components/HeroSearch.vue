@@ -5,7 +5,7 @@
 
     <div v-if="heroes$">
     <ul class="search-result">
-        <li v-for="hero in heroes$" :key="hero.id">
+        <li v-for="hero in heroes" :key="hero.id">
             <router-link :to="`/detail/${hero.id}`">{{hero.name}}</router-link>
         </li>
     </ul>
@@ -21,19 +21,19 @@
         name: "HeroSearch",
         data() {
             return {
-                heroes$: [],
+                heroes: [],
                 searchTerm: ''
             }
         },
         methods: {
             search() {
-                this.$heroService.searchHeroes(this.searchTerm, response => this.heroes$ = response.body.heroes);
+                this.$heroService.searchHeroes(this.searchTerm, response => this.heroes = response.body.heroes);
                 // searchTerms.next(this.searchTerm);
             }
         },
         created() {
-            this.subscription = this.$heroService.searchHeroes(this.searchTerm)
-                .subscribe()
+            // this.subscription = this.$heroService.searchHeroes(this.searchTerm)
+            //     .subscribe()
         //     this.heroes$ = this.searchTerms.pipe(
         //         // wait 300 ms after each keystroke before considering the term
         //         debounceTime(300),
