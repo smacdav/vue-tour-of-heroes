@@ -1,7 +1,6 @@
 <template>
 <div>
     <h3>Top Heroes</h3>
-    <div v-if="loading">Loading Top Heroes...</div>
     <div class="grid grid-pad">
         <router-link v-for="hero in heroes" :key="hero.id" class="col-1-4" :to="`/detail/${hero.id}`">
             <div class="module hero">
@@ -22,16 +21,12 @@
         components: {HeroSearch},
         data() {
             return {
-                loading: false,
                 heroes: [],
-                // TODO: Use dependency injection
             }
         },
         methods: {
             getHeroes() {
-                this.loading = true;
-                this.$heroService.getHeroes(heroes => this.heroes = heroes.slice(1, 5));
-                this.loading = false;
+                this.$heroService.getHeroes().subscribe(response => this.heroes = response.body.heroes.slice(1, 5));
             }
         },
         // created is run when initializing the created component

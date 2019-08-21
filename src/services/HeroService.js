@@ -17,61 +17,59 @@ class HeroService {
 
         return HeroService.serviceInstance;
     }
-    getHeroes(callback) {
-        Vue.http.get(this.heroesUrl)
-            .then(
-                response => {
-                    callback(response.body.heroes);
-                    this.log('fetched heroes');
-                },
-                this.handleError('getHeroes', []));
-    }
-
-    getHero(id, callback) {
-        Vue.http.get(`${this.heroesUrl}/${id}`)
-            .then(
-                response => {
-                    callback(response.body.hero);
-                    this.log(`fetched hero id=${id}`);
-                },
-                this.handleError(`getHero id=${id}`)
+    getHeroes() {
+        return Observable.fromPromise(Vue.http.get(this.heroesUrl))
+            .pipe(
+                tap(_ => this.log('fetched heroes')),
+                catchError(this.handleError('getHeroes', { body: { heroes: [] } }))
             );
     }
 
+    getHero(id) {
+        return Observable.fromPromise(Vue.http.get(`${this.heroesUrl}/${id}`))
+            .pipe(
+                tap(_ => this.log(`fetched hero id=${id}`)),
+                catchError(this.handleError(`getHero id=${id}`))
+            );
+    }
+
+    /** PUT: update the hero on the server */
     updateHero(hero) {
-        Vue.http.put(this.heroesUrl, { hero })
-            .then(
-                response => {},
-                this.handleError(`updateHero id=${hero.id}, name=${hero.name}`)
+        return Observable.fromPromise(Vue.http.put(this.heroesUrl, { hero }))
+            .pipe(
+                tap(_ => this.log(`updated hero id=${hero.id}`)),
+                catchError(this.handleError('updateHero'))
             );
     }
 
+    /** POST: add a new hero to the server */
     addHero(hero) {
-        Vue.http.post(this.heroesUrl, { hero })
-            .then(
-                response => {},
-                this.handleError(`addHero name=${hero.name}`)
+        return Observable.fromPromise(Vue.http.post(this.heroesUrl, { hero }))
+            .pipe(
+                tap(_ => this.log(`added hero name=${hero.name}`)),
+                catchError(this.handleError('addHero'))
             );
     }
 
+    /** DELETE: delete the hero from the server */
     deleteHero(hero) {
-        Vue.http.delete(this.heroesUrl, {hero})
-            .then(
-                response => {},
-                this.handleError(`deleteHero id=${hero.id} name=${hero.name}`)
+        return Observable.fromPromise(Vue.http.delete(this.heroesUrl, { hero }))
+            .pipe(
+                tap(_ => this.log(`deleted hero id=${hero.id}`)),
+                catchError(this.handleError('deleteHero'))
             );
     }
 
-    searchHeroes(term, callback) {
+    /* GET heroes whose name contains search term */
+    searchHeroes(term) {
         if (!term.trim()) {
-            callback({ body: []});
-            return;
+            return of({ body: { heroes: [] } });
         }
 
-        Vue.http.get(`${this.heroesUrl}/?name=${term}`)
-            .then(
-                resp => callback(resp),
-                this.handleError(`searchHeroes term=${term}`)
+        return Observable.fromPromise(Vue.http.get(`${this.heroesUrl}/?name=${term}`))
+            .pipe(
+                tap(_ => this.log(`found heroes matching "${term}"`)),
+                catchError(this.handleError('searchHeroes', { body: { heroes: [] } }))
             );
     }
 

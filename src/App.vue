@@ -18,13 +18,13 @@
     components: {Messages},
     data() {
       return {
-        title: 'Tour of Heroes'
+        title: 'vue-tour-of-heroes'
       };
     }
   }
 </script>
 
-<style>
+<style scoped>
   /* AppComponent's private CSS styles */
   h1 {
     font-size: 1.2em;

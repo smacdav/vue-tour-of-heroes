@@ -1,6 +1,5 @@
 <template>
     <div>
-        <div v-if="loading">Loading...</div>
         <div v-if="hero">
             <h2>{{hero.name | uppercase}}</h2>
             <div><span>id: </span>{{hero.id}}</div>
@@ -22,7 +21,6 @@
         name: "HeroDetail",
         data() {
             return {
-                loading: false,
                 hero: Hero,
                 initialName: ''
             }
@@ -30,20 +28,18 @@
         methods: {
             getHero() {
                 const id = +this.$route.params.id;
-                this.loading = true;
-                this.$heroService.getHero(id, hero => {
-                    this.hero = hero;
-                    this.initialName = hero.name;
+                this.$heroService.getHero(id).subscribe(response => {
+                    this.hero = response.body.hero;
+                    this.initialName = response.body.hero.name;
                 });
-                this.loading = false;
             },
             goBack() {
+                // Necessary to fix a bug caused by the fact that Vue uses a virtual DOM and angular does not
                 this.hero.name = this.initialName;
                 this.$router.back();
             },
             save() {
-                this.$heroService.updateHero(this.hero);
-                this.$router.back();
+                this.$heroService.updateHero(this.hero).subscribe(() => this.$router.back());
             }
         },
         // created is run when initializing the created component

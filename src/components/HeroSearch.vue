@@ -14,57 +14,31 @@
 </template>
 
 <script>
-    import { Observable, Subject } from 'rxjs';
-    import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
+    import { Subject } from 'rxjs';
 
     export default {
         name: "HeroSearch",
         data() {
             return {
                 heroes: [],
-                searchTerm: ''
+                searchTerm: '',
+                searchTerms: new Subject()
             }
         },
         methods: {
             search() {
-                this.$heroService.searchHeroes(this.searchTerm, response => this.heroes = response.body.heroes);
-                // searchTerms.next(this.searchTerm);
+                this.searchTerms.next(this.searchTerm);
             }
         },
         created() {
-            // this.subscription = this.$heroService.searchHeroes(this.searchTerm)
-            //     .subscribe()
-        //     this.heroes$ = this.searchTerms.pipe(
-        //         // wait 300 ms after each keystroke before considering the term
-        //         debounceTime(300),
-        //         // ignore new term if same as previous term
-        //         distinctUntilChanged(),
-        //         // switch to new search observable each time the term changes
-        //         switchMap((term) => this.$heroService.searchHeroes(term))
-        //     );
-        },
-        // filters: {
-        //     asyncPipe: function(v) {
-        //         this.heroes$ = this.searchTerms.pipe(
-        //             // wait 300 ms after each keystroke before considering the term
-        //             debounceTime(300),
-        //             // ignore new term if same as previous term
-        //             distinctUntilChanged(),
-        //             // switch to new search observable each time the term changes
-        //             switchMap((term) => this.$heroService.searchHeroes(term))
-        //         );
-        //     }
-        // },
-        // subscriptions: {
-        //     heroes$: this.searchTerms.pipe(
-        //         // wait 300 ms after each keystroke before considering the term
-        //         debounceTime(300),
-        //         // ignore new term if same as previous term
-        //         distinctUntilChanged(),
-        //         // switch to new search observable each time the term changes
-        //         switchMap((term) => this.$heroService.searchHeroes(term))
-        //     )
-        // }
+            this.searchTerms
+                .debounceTime(300)
+                .distinctUntilChanged()
+                .subscribe(
+                    () => this.$heroService.searchHeroes(this.searchTerm)
+                        .subscribe(res => this.heroes = res.body.heroes)
+                );
+        }
     }
 </script>
 

@@ -5,10 +5,9 @@
             <label>Hero name:
                 <input v-model="hero.name" id="heroName" />
             </label>
-            <!-- @click passes input value to add() and then clears the input -->
+            <!-- @click calls the add() function; add() clears the input after receiving a response -->
             <button @click="add">add</button>
         </div>
-        <div v-if="loading">Loading Heroes, Please Wait</div>
         <ul class="heroes">
             <li v-for="hero in heroes">
                 <router-link :to="`/detail/${hero.id}`">
@@ -31,7 +30,6 @@
             let hero = new Hero();
 
             return {
-                loading: false,
                 hero: hero,
                 selectedHero: undefined,
                 heroes: [],
@@ -39,9 +37,7 @@
         },
         methods: {
             getHeroes() {
-                this.loading = true;
-                this.$heroService.getHeroes(heroes => this.heroes = heroes);
-                this.loading = false;
+                this.$heroService.getHeroes().subscribe(response => this.heroes = response.body.heroes);
             },
             add() {
                 if (!this.hero.name) {
@@ -51,12 +47,11 @@
                 if (!name) {
                     return;
                 }
-                this.$heroService.addHero({ name });
-                this.hero.name = '';
+                this.$heroService.addHero({ name }).subscribe(() => this.hero.name = '');
             },
             deleteHero(hero) {
                 this.heroes = this.heroes.filter(h => h !== hero);
-                this.$heroService.deleteHero(hero);
+                this.$heroService.deleteHero(hero).subscribe();
             }
         },
         // created is run when initializing the created component
